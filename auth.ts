@@ -11,42 +11,57 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       user: { name, email, image },
       profile: { id, login, bio },
     }) {
-      const existingUser = await client
-        .withConfig({ useCdn: false })
-        .fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
-          id,
-        });
-
-      if (!existingUser) {
-        await writeClient.create({
-          _type: "author",
-          id,
-          name,
-          username: login,
-          email,
-          image,
-          bio: bio || "",
-        });
-      }
-
-      return true;
-    },
-    async jwt({ token, account, profile }) {
-      if (account && profile && profile.id) {
-        const user = await client
+      try {
+        const existingUser = await client
           .withConfig({ useCdn: false })
           .fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
-            id: profile?.id,
+            id,
           });
 
-        token.id = user?._id;
-      }
+        if (!existingUser) {
+          await writeClient.create({
+            _type: "author",
+            id,
+            name,
+            username: login,
+            email,
+            image,
+            bio: bio || "",
+          });
+        }
 
-      return token;
+        return true;
+      } catch (error) {
+        console.error("Error in signIn callback:", error);
+        return false;
+      }
+    },
+    async jwt({ token, account, profile }) {
+      try {
+        if (account && profile && profile.id) {
+          const user = await client
+            .withConfig({ useCdn: false })
+            .fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
+              id: profile?.id,
+            });
+
+          token.id = user?._id;
+        }
+
+        return token;
+      } catch (error) {
+        console.error("Error in jwt callback:", error);
+        return token;
+      }
     },
     async session({ session, token }) {
-      Object.assign(session, { id: token.id });
-      return session;
+      try {
+        Object.assign(session, { id: token.id });
+        return session;
+      } catch (error) {
+        console.error("Error in session callback:", error);
+        return session;
+      }
     },
   },
 });
