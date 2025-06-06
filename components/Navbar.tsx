@@ -33,13 +33,13 @@ const Navbar = async () => {
                 </button>
               </form>
               <Link href={`/user/${session?.id}`}>
-                <Avatar className="size-10" key={session?.user?.image || "fallback"} >
-                  <AvatarImage
-                    src={session?.user?.image || ""}
-                    alt={session?.user?.name || ""}
-                  />
-                  
-                </Avatar>
+                <Image
+                  src={session?.user?.image || "/default.png"}
+                  alt={session?.user?.name || "User"}
+                  width={40}
+                  height={40}
+                  className="rounded-full size-10"
+                />
               </Link>
             </>
           ) : (
