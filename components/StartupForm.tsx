@@ -77,6 +77,11 @@ const StartupForm = () => {
   console.log("🔄 Component render - isPending:", isPending);
   console.log("🔄 Component render - state:", state);
 
+  const handleFormClick = (e: React.FormEvent) => {
+    console.log("🖱️ Form submit button clicked");
+    console.log("📝 Current pitch value:", pitch);
+  };
+
   return (
     <form action={formAction} className="startup-form">
       <div className="">
@@ -160,6 +165,7 @@ const StartupForm = () => {
         type="submit"
         className="startup-form_btn text-white"
         disabled={isPending}
+        onClick={handleFormClick}
       >
         {isPending ? "Submitting..." : "Submit your pitch"}
         <Send className="size-8 ml-2" />
