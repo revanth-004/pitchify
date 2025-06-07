@@ -74,8 +74,7 @@ const StartupForm = () => {
     error: "",
     status: "INITIAL",
   });
-  console.log("🔄 Component render - isPending:", isPending);
-  console.log("🔄 Component render - state:", state);
+  
 
   const handleFormClick = (e: React.FormEvent) => {
     console.log("🖱️ Form submit button clicked");
