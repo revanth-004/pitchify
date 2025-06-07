@@ -8,7 +8,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { useToast } from "@/hooks/use-toast";
-import Router, { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/actions";
 
 const StartupForm = () => {
@@ -16,8 +16,10 @@ const StartupForm = () => {
   const [pitch, setPitch] = useState("");
   const { toast } = useToast();
   const router = useRouter();
-
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
+    console.log("🚀 handleFormSubmit called");
+    console.log("📝 prevState:", prevState);
+    console.log("📋 formData entries:", Array.from(formData.entries()));
     try {
       const formValues = {
         title: formData.get("title") as string,
@@ -26,10 +28,13 @@ const StartupForm = () => {
         link: formData.get("link") as string,
         pitch,
       };
+      console.log("📊 formValues:", formValues);
       await formSchema.parseAsync(formValues);
-      
 
+      console.log("🔄 Calling createPitch...");
       const result = await createPitch(prevState, formData, pitch);
+      console.log("📤 createPitch result:", result);
+
       if (result.status == "SUCCESS") {
         toast({
           title: "Success",
@@ -39,7 +44,9 @@ const StartupForm = () => {
       }
       return result;
     } catch (error) {
+      console.log("❌ Error in handleFormSubmit:", error);
       if (error instanceof z.ZodError) {
+        console.log("🔍 Zod validation error:", error.flatten());
         const fieldErrors = error.flatten().fieldErrors;
         setErrors(fieldErrors as unknown as Record<string, string>);
         toast({
@@ -67,6 +74,8 @@ const StartupForm = () => {
     error: "",
     status: "INITIAL",
   });
+  console.log("🔄 Component render - isPending:", isPending);
+  console.log("🔄 Component render - state:", state);
 
   return (
     <form action={formAction} className="startup-form">
