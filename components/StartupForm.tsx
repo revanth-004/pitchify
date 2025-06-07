@@ -74,7 +74,6 @@ const StartupForm = () => {
     error: "",
     status: "INITIAL",
   });
-  
 
   const handleFormClick = (e: React.FormEvent) => {
     console.log("🖱️ Form submit button clicked");
@@ -159,6 +158,7 @@ const StartupForm = () => {
         />
         {errors.pitch && <p className="startup-form_error">{errors.pitch}</p>}
       </div>
+      <Button onClick={handleFormClick}>Testing</Button>
 
       <Button
         type="submit"
