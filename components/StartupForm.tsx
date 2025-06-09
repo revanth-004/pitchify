@@ -19,6 +19,7 @@ const StartupForm = () => {
   const router = useRouter();
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
+    console.log("This appears in BROWSER console");
     try {
       const formValues = {
         title: formData.get("title") as string,
